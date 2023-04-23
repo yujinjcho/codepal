@@ -9,29 +9,30 @@ start_tag = "<START>"
 end_tag = "<END>"
 pattern = re.compile(f"{start_tag}(.*?){end_tag}", re.DOTALL)
 
-def get_api_key_from_file():
+def get_conf():
     config_file_path = os.path.expanduser('~/.codepal/keys.conf')
 
     if not os.path.isfile(config_file_path):
         print("Config file not found")  # Debug: print a message if the config file is not found
         return None
 
+    conf = {}
+
     with open(config_file_path, 'r') as f:
         for line in f:
             key, value = line.strip().split('=')
-            if key == 'OPENAI_API_KEY':
-                return value
+            conf[key] = value
 
-    print("API key not found in the config file")  # Debug: print a message if the API key is not found
-    return None
+    return conf
 
 
-def generate_code(file_name, instructions):
+def generate_code(file_name, instructions, model):
     with open(file_name, 'r') as f:
         contents = f.read()
 
+    print(f'Model {model}')
     response = openai.ChatCompletion.create(
-        model='gpt-4',
+        model=model,
         messages=[
             {'role':'system', 'content': 'You are an amazing pair programmer'},
             {'role':'system', 'content': 'You are given instructions on editing an existing file. To the best of your abilities, generate what the updated file should be. Please prefix the code with <START> and end the code with <END>. Everything in between should be able to be written as a new file. If the prompt does not make sense, please just respond with <NO_RESPONSE>'},
@@ -61,7 +62,9 @@ def main():
 
     args = parser.parse_args()
 
-    api_key = args.api_key or get_api_key_from_file() or os.environ.get("OPENAI_API_KEY")
+    conf = get_conf()
+
+    api_key = args.api_key or conf.get('OPENAI_API_KEY', None) or os.environ.get("OPENAI_API_KEY")
 
     if not api_key:
         print("Please provide an OpenAI API key either as an environment variable or as a command line argument.")
@@ -73,7 +76,9 @@ def main():
         print('This file does not exist')
         exit(1)
 
-    generate_code(args.file_name, args.instructions)
+    model = conf.get('OPENAI_MODEL', 'gpt-4')
+
+    generate_code(args.file_name, args.instructions, model)
 
 if __name__ == '__main__':
     main()

@@ -3,25 +3,30 @@ import unittest
 from dataclasses import dataclass, replace, field
 from datetime import datetime
 
+# Define the Task dataclass
 @dataclass
 class Task:
     description: str
     created_at: datetime
     deleted_at: datetime = field(default=None)
 
+# Define the ToDoList class
 class ToDoList:
     def __init__(self):
         self.todos = []
 
+    # Add a new task to the list
     def add_task(self, task):
         self.todos.append(task)
 
+    # Remove a task from the list by index
     def remove_task(self, idx):
         if 0 <= idx < len(self.todos):
             self.todos.pop(idx)
         else:
             print("Invalid index")
 
+    # Mark a task as completed by index
     def complete_task(self, idx):
         if 0 <= idx < len(self.todos):
             task = self.todos[idx]
@@ -30,6 +35,7 @@ class ToDoList:
         else:
             print("Invalid index")
 
+    # Rename a task by index
     def rename_task(self, idx, new_description):
         if 0 <= idx < len(self.todos):
             task = self.todos[idx]
@@ -37,19 +43,27 @@ class ToDoList:
         else:
             print("Invalid index")
 
+    # Display the tasks in the list
     def display_list(self):
         output = "Here is your to-do list!\n"
         for i, todo in enumerate(self.todos):
             output += f"{i}: {todo.description} (Created at: {todo.created_at})\n"
         return output.strip()
 
+# Define the TestToDoList unittest class
 class TestToDoList(unittest.TestCase):
     def test_add_task(self):
+        """
+        Test adding task to the ToDoList
+        """
         todo_list = ToDoList()
         todo_list.add_task(Task("Buy groceries", datetime.now()))
         self.assertEqual(len(todo_list.todos), 1)
 
     def test_remove_task(self):
+        """
+        Test removing task from the ToDoList
+        """
         todo_list = ToDoList()
         todo_list.add_task(Task("Buy groceries", datetime.now()))
         todo_list.add_task(Task("Walk the dog", datetime.now()))
@@ -57,6 +71,9 @@ class TestToDoList(unittest.TestCase):
         self.assertEqual(len(todo_list.todos), 1)
 
     def test_complete_task(self):
+        """
+        Test marking a task as completed from the ToDoList
+        """
         todo_list = ToDoList()
         todo_list.add_task(Task("Buy groceries", datetime.now()))
         todo_list.add_task(Task("Walk the dog", datetime.now()))
@@ -64,19 +81,26 @@ class TestToDoList(unittest.TestCase):
         self.assertIsNotNone(todo_list.todos[0].deleted_at)
 
     def test_rename_task(self):
+        """
+        Test renaming a task from the ToDoList
+        """
         todo_list = ToDoList()
-        todo_list.add_task(Task("Buy groceries",(datetime.now())))
+        todo_list.add_task(Task("Buy groceries", datetime.now()))
         todo_list.add_task(Task("Walk the dog", datetime.now()))
         todo_list.rename_task(0, "Pick up groceries")
         self.assertEqual(todo_list.todos[0].description, "Pick up groceries")
 
     def test_display_list(self):
+        """
+        Test displaying the to-do list from the ToDoList
+        """
         todo_list = ToDoList()
         todo_list.add_task(Task("Buy groceries", datetime.now()))
         todo_list.add_task(Task("Walk the dog", datetime.now()))
         expected_output = "Here is your to-do list!\n0: Buy groceries (Created at: " + str(todo_list.todos[0].created_at) + ")\n1: Walk the dog (Created at: " + str(todo_list.todos[1].created_at) + ")"
         self.assertEqual(todo_list.display_list(), expected_output)
 
+# Define the main application function
 def run_application():
     todo_list = ToDoList()
     while True:
