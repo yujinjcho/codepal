@@ -6,9 +6,9 @@ import argparse
 import openai
 import tiktoken
 
-start_tag = "<START>"
-end_tag = "<END>"
-pattern = re.compile(f"{start_tag}(.*?){end_tag}", re.DOTALL)
+START_TAG = "<START>"
+END_TAG = "<END>"
+RESPONSE_PATTERN = re.compile(f"{START_TAG}(.*?){END_TAG}", re.DOTALL)
 
 def get_conf():
     config_file_path = os.path.expanduser('~/.codepal/keys.conf')
@@ -51,7 +51,7 @@ def generate_code(file_name, instructions, model):
     print(f'Response usage {usage}')
 
     response_content = response['choices'][0]['message']['content']
-    updated_code_match = pattern.search(response_content)
+    updated_code_match = RESPONSE_PATTERN.search(response_content)
 
     if not updated_code_match:
         print('Did not have matching code')
@@ -73,7 +73,7 @@ def main():
 
     conf = get_conf()
 
-    api_key = args.api_key or conf.get('OPENAI_API_KEY', None) or os.environ.get("OPENAI_API_KEY")
+    api_key = conf.get('OPENAI_API_KEY', None) or os.environ.get("OPENAI_API_KEY")
 
     if not api_key:
         print("Please provide an OpenAI API key either as an environment variable or as a command line argument.")
