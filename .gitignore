@@ -3,3 +3,5 @@ venv
 *.swp
 test.py
 __pycache__
+example_command
+.idea

@@ -68,7 +68,6 @@ def main():
     parser = argparse.ArgumentParser(description='Generate code using OpenAI API and update a target file.')
     parser.add_argument('file_name', help='The target file to be updated')
     parser.add_argument('instructions', help='The instructions for generating the new code')
-    parser.add_argument('--api_key', help='The OpenAI API key', default=os.environ.get("OPENAI_API_KEY"))
 
     args = parser.parse_args()
 
