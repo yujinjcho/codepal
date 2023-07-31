@@ -9,6 +9,11 @@ Changes will automatically be applied. Please use version contol.
 pip3 install -e .
 ```
 
+## Usage
+```
+codepal FILE_PATH 'Some prompt'
+```
+
 ## Configuration
 
 Supports the following environment variables:
@@ -18,6 +23,6 @@ Supports the following environment variables:
 Alternatively, these could be set in `~./codepal/keys.conf` e.g.
 ```
 OPENAI_API_KEY=YOUR_KEY
-OPENAI_MODEL=gpt-3.5-turbo
+OPENAI_MODEL=gpt-4
 ```
 
