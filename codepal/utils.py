@@ -25,8 +25,3 @@ def get_conf(conf_filepath):
         return None
 
     return conf
-
-
-def load_file(filepath):
-    with open(filepath, 'r') as f:
-        return f.read()
